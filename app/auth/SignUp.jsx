@@ -10,29 +10,36 @@ import {
 
 export default function SignUp() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [email, setEmail] = useState("");
 
   const handleSignUp = async () => {
     setError("");
     setSuccess("");
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
     try {
-      const response = await fetch("http://10.0.2.2:8080/api/auth/signup", {
+      const response = await fetch("http://10.0.2.2:8081/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, email }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+        }),
       });
 
-      const data = await response.text(); // ⚠️ Changed from `.json()` to `.text()` if backend sends plain message
+      const data = await response.text();
 
       if (response.ok) {
         setSuccess("Signup successful! Please login.");
@@ -53,7 +60,19 @@ export default function SignUp() {
 
       <View style={styles.form}>
         <TextInput
-          placeholder="email address"
+          placeholder="First Name"
+          style={styles.input}
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <TextInput
+          placeholder="Last Name"
+          style={styles.input}
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <TextInput
+          placeholder="Email Address"
           style={styles.input}
           value={email}
           onChangeText={setEmail}
@@ -61,20 +80,14 @@ export default function SignUp() {
           autoCapitalize="none"
         />
         <TextInput
-          placeholder="create username"
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          placeholder="create password"
+          placeholder="Create Password"
           secureTextEntry
           style={styles.input}
           value={password}
           onChangeText={setPassword}
         />
         <TextInput
-          placeholder="confirm password"
+          placeholder="Confirm Password"
           secureTextEntry
           style={styles.input}
           value={confirmPassword}

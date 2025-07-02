@@ -1,4 +1,5 @@
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -11,25 +12,27 @@ import {
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState(""); // Changed from username
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
     setError("");
+
     try {
-      const response = await fetch("http://10.0.2.2:8080/api/auth/login", {
+      const response = await fetch("http://10.0.2.2:8081/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: username, password }), // ✅ Send "email"
+        body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.text(); // Spring Boot returns a plain string
+      const data = await response.json();
 
-      if (response.ok && data.includes("Login successful")) {
-        router.replace("/home");
+      if (response.ok && data.token) {
+        await AsyncStorage.setItem("userToken", data.token);
+        router.replace("/home"); // Navigate to home
       } else {
-        setError(data || "Login failed");
+        setError(data.message || "Login failed");
       }
     } catch (err) {
       console.log("LOGIN ERROR:", err);
@@ -55,8 +58,8 @@ export default function Login() {
           <TextInput
             placeholder="Email"
             style={styles.input}
-            value={username}
-            onChangeText={setUsername}
+            value={email}
+            onChangeText={setEmail}
             autoCapitalize="none"
             keyboardType="email-address"
           />
@@ -78,10 +81,10 @@ export default function Login() {
           <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
         ) : null}
 
-        <Text style={styles.forgot}>forget password</Text>
+        <Text style={styles.forgot}>Forget password</Text>
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login in</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
 
