@@ -1,8 +1,11 @@
 import { router } from "expo-router";
+import { useEffect } from "react";
 import {
   Dimensions,
   Image,
+  Platform,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -11,9 +14,21 @@ import {
 const { width, height } = Dimensions.get("window");
 
 export default function SplashScreen() {
+  // Optional: Auto-navigate after a delay (skip if you want only manual navigation)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/Onboarding/step1");
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <View style={styles.container}>
-      {/* New decorative background design */}
+      <StatusBar
+        barStyle={Platform.OS === "ios" ? "dark-content" : "default"}
+        backgroundColor="#f5f0fa"
+      />
+      {/* Decorative background */}
       <View style={styles.gradientBg} />
       <View style={styles.topWave} />
       <View style={styles.bottomWave} />
@@ -28,18 +43,31 @@ export default function SplashScreen() {
         source={require("../assets/flight logo.png")}
         style={styles.image}
         resizeMode="contain"
+        accessibilityLabel="FlightHub Logo"
       />
 
-      <Text style={styles.title}>Welcome to Airwise</Text>
+      <Text style={styles.title} accessibilityRole="header">
+        Welcome to Airwise
+      </Text>
 
       <Pressable
-        style={styles.button}
+        style={({ pressed }) => [
+          styles.button,
+          pressed && { backgroundColor: "#7e57c2" },
+        ]}
         onPress={() => router.push("/Onboarding/step1")}
+        accessibilityRole="button"
+        accessibilityLabel="Let's Get Started"
       >
         <Text style={styles.buttonText}>Let’s Get Started</Text>
       </Pressable>
 
-      <Text style={styles.subtitle}>Your All-in-One Flight Companion!</Text>
+      <Text
+        style={styles.subtitle}
+        accessibilityLabel="Your All-in-One Flight Companion"
+      >
+        Your All-in-One Flight Companion!
+      </Text>
     </View>
   );
 }
@@ -47,7 +75,7 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f0fa", // light purple background
+    backgroundColor: "#f5f0fa",
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
@@ -59,7 +87,7 @@ const styles = StyleSheet.create({
     height: height * 1.5,
     top: -height * 0.25,
     left: -width * 0.25,
-    backgroundColor: "#ede7f6", // very light purple
+    backgroundColor: "#ede7f6",
     borderRadius: width,
     opacity: 0.7,
     zIndex: 0,
@@ -70,7 +98,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: width * 1.2,
     height: height * 0.18,
-    backgroundColor: "#d1c4e9", // light purple
+    backgroundColor: "#d1c4e9",
     borderBottomRightRadius: width * 0.7,
     borderBottomLeftRadius: width * 0.7,
     opacity: 0.55,
@@ -83,7 +111,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: width * 1.2,
     height: height * 0.18,
-    backgroundColor: "#b39ddb", // slightly deeper light purple
+    backgroundColor: "#b39ddb",
     borderTopLeftRadius: width * 0.7,
     borderTopRightRadius: width * 0.7,
     opacity: 0.55,
@@ -97,7 +125,7 @@ const styles = StyleSheet.create({
     width: width * 0.35,
     height: width * 0.35,
     borderRadius: width * 0.175,
-    backgroundColor: "#ce93d8", // pastel purple
+    backgroundColor: "#ce93d8",
     opacity: 0.35,
     zIndex: 0,
   },
@@ -108,7 +136,7 @@ const styles = StyleSheet.create({
     width: width * 0.28,
     height: width * 0.28,
     borderRadius: width * 0.14,
-    backgroundColor: "#b39ddb", // pastel purple
+    backgroundColor: "#b39ddb",
     opacity: 0.32,
     zIndex: 0,
   },
@@ -118,7 +146,7 @@ const styles = StyleSheet.create({
     left: width * 0.38,
     width: 36,
     height: 36,
-    backgroundColor: "#e1bee7", // light purple
+    backgroundColor: "#e1bee7",
     opacity: 0.18,
     zIndex: 0,
     transform: [{ rotate: "45deg" }],
@@ -130,7 +158,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#9575cd", // purple
+    backgroundColor: "#9575cd",
     opacity: 0.18,
     zIndex: 0,
   },
@@ -141,7 +169,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#d1c4e9", // light purple
+    backgroundColor: "#d1c4e9",
     opacity: 0.18,
     zIndex: 0,
   },
@@ -152,29 +180,37 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: "#ede7f6", // very light purple
+    backgroundColor: "#ede7f6",
     opacity: 0.18,
     zIndex: 0,
   },
   image: {
     width: "100%",
-    height: 350,
-    marginBottom: 20,
+    height: 320,
+    marginBottom: 18,
     zIndex: 1,
+    borderRadius: 24,
+    backgroundColor: "#fff",
+    shadowColor: "#b39ddb",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
   },
   title: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: "900",
-    color: "#7e57c2", // purple
-    marginBottom: 30,
+    color: "#7e57c2",
+    marginBottom: 28,
     zIndex: 1,
     letterSpacing: 1,
     textShadowColor: "#fff",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
+    textAlign: "center",
   },
   button: {
-    backgroundColor: "#9575cd", // purple
+    backgroundColor: "#9575cd",
     paddingVertical: 18,
     paddingHorizontal: 40,
     borderRadius: 16,
@@ -182,9 +218,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
     shadowColor: "#9575cd",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+    alignSelf: "center",
+    minWidth: 220,
   },
   buttonText: {
     color: "#fff",
@@ -195,10 +233,11 @@ const styles = StyleSheet.create({
     textShadowColor: "#7e57c2",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 18,
-    color: "#000", // changed to black
+    color: "#4b2996",
     zIndex: 1,
     fontWeight: "700",
     marginTop: 8,
@@ -206,5 +245,6 @@ const styles = StyleSheet.create({
     textShadowColor: "#fff",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
+    textAlign: "center",
   },
 });

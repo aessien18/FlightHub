@@ -2,7 +2,9 @@ import { router } from "expo-router";
 import {
   Dimensions,
   Image,
+  Platform,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -13,6 +15,10 @@ const { width, height } = Dimensions.get("window");
 export default function Step3() {
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle={Platform.OS === "ios" ? "dark-content" : "default"}
+        backgroundColor="#f5f7ff"
+      />
       {/* Decorative background shapes */}
       <View style={styles.bgCircleTopLeft} />
       <View style={styles.bgCircleBottomRight} />
@@ -27,38 +33,67 @@ export default function Step3() {
             source={require("../../assets/onboarding3.png")}
             style={styles.image}
             resizeMode="contain"
+            accessibilityLabel="Onboarding illustration"
           />
         </View>
       </View>
 
-      <Text style={styles.title}>Rent car to your destination easily</Text>
+      <Text style={styles.title} accessibilityRole="header">
+        Rent car to your destination easily
+      </Text>
       <Text style={styles.description}>
-        pick a cab to take you wherever you want
+        Pick a cab to take you wherever you want
       </Text>
 
       <View style={styles.pagination}>
         {/* Dots row above the buttons */}
-        <View style={styles.dotsRow}>
+        <View
+          style={styles.dotsRow}
+          accessible
+          accessibilityRole="progressbar"
+          accessibilityLabel="Step 3 of 3"
+        >
           <View style={styles.dot} />
           <View style={styles.dot} />
           <View style={[styles.dot, styles.activeDot]} />
         </View>
         {/* Buttons row below the dots */}
         <View style={styles.buttonRow}>
-          <Pressable onPress={() => router.push("/Onboarding/step2")}>
-            <Text style={styles.navText}>prev</Text>
+          <Pressable
+            onPress={() => router.push("/Onboarding/step2")}
+            accessibilityRole="button"
+            accessibilityLabel="Go to previous onboarding step"
+            style={({ pressed }) => [
+              styles.navButton,
+              pressed && { opacity: 0.7 },
+            ]}
+          >
+            <Text style={styles.navText}>Prev</Text>
           </Pressable>
           <Pressable
             onPress={() => router.replace("/auth/Login")}
-            style={styles.doneButton}
+            style={({ pressed }) => [
+              styles.doneButton,
+              pressed && { backgroundColor: "#7b1fa2" },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Finish onboarding and go to login"
           >
             <Text style={styles.doneText}>Done</Text>
           </Pressable>
         </View>
       </View>
 
-      <Pressable onPress={() => router.replace("/splash")}>
-        <Text style={styles.skip}>skip</Text>
+      <Pressable
+        onPress={() => router.replace("/splash")}
+        accessibilityRole="button"
+        accessibilityLabel="Skip onboarding"
+        style={({ pressed }) => [
+          styles.skipButton,
+          pressed && { opacity: 0.7 },
+        ]}
+      >
+        <Text style={styles.skip}>Skip</Text>
       </Pressable>
     </View>
   );
@@ -155,25 +190,33 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginTop: 40,
     marginBottom: 10,
+    shadowColor: "#90caf9",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 260,
+    height: 260,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 28,
+    fontWeight: "bold",
     textAlign: "center",
-    color: "#000",
+    color: "#7b1fa2", // vibrant purple
     marginTop: 10,
     zIndex: 1,
+    letterSpacing: 0.5,
   },
   description: {
-    fontSize: 14,
+    fontSize: 17,
     textAlign: "center",
-    color: "#888",
+    color: "#4b2996", // deeper purple
     marginBottom: 20,
     zIndex: 1,
+    fontWeight: "500",
+    letterSpacing: 0.2,
   },
   pagination: {
     width: "100%",
@@ -195,35 +238,64 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginBottom: 0,
+    marginTop: 8,
+  },
+  navButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    backgroundColor: "#e3f2fd",
+    shadowColor: "#90caf9",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   navText: {
     fontSize: 16,
-    color: "#000",
+    color: "#7b1fa2", // accent purple
+    fontWeight: "600",
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#ddd",
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#D1D5DB",
+    marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: "#000",
+    backgroundColor: "#7b1fa2", // accent purple
+    width: 18,
+    height: 12,
+    borderRadius: 6,
   },
   doneButton: {
-    backgroundColor: "#D1D1FF",
-    paddingVertical: 6,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    backgroundColor: "#7b1fa2",
+    paddingVertical: 10,
+    paddingHorizontal: 28,
+    borderRadius: 16,
+    marginLeft: 52, // increased from 12 to move "Done" further right // increased from 12 to move "Done" further right
+    shadowColor: "#7b1fa2",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
   },
   doneText: {
-    fontSize: 16,
-    color: "#000",
-    fontWeight: "500",
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+  skipButton: {
+    marginTop: 16,
+    alignSelf: "center",
   },
   skip: {
-    fontSize: 14,
+    fontSize: 15,
     color: "#aaa",
-    marginTop: 10,
     zIndex: 1,
+    textDecorationLine: "underline",
+    fontWeight: "500",
   },
 });

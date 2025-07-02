@@ -2,6 +2,8 @@ import { useRouter } from "expo-router";
 import {
   Dimensions,
   Image,
+  Platform,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,6 +17,10 @@ export default function Step1() {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle={Platform.OS === "ios" ? "dark-content" : "default"}
+        backgroundColor="#eaf6fb"
+      />
       {/* Decorative background shapes */}
       <View style={styles.bgCircleTopLeft} />
       <View style={styles.bgCircleBottomRight} />
@@ -36,24 +42,48 @@ export default function Step1() {
             source={require("../../assets/onboarding.png")}
             style={styles.image}
             resizeMode="contain"
+            accessibilityLabel="Onboarding illustration"
           />
         </View>
       </View>
       <View style={styles.textSection}>
-        <Text style={styles.title}>Track your Flights{"\n"}in real time</Text>
-        <Text style={styles.subtitle}>organize and book flight with ease</Text>
+        <Text style={styles.title} accessibilityRole="header">
+          Track your Flights{"\n"}in real time
+        </Text>
+        <Text style={styles.subtitle}>Organize and book flights with ease</Text>
       </View>
-      <View style={styles.dotsRow}>
+      <View
+        style={styles.dotsRow}
+        accessible
+        accessibilityRole="progressbar"
+        accessibilityLabel="Step 1 of 3"
+      >
         <View style={[styles.dot, styles.activeDot]} />
         <View style={styles.dot} />
         <View style={styles.dot} />
       </View>
       <View style={styles.buttonRow}>
-        <TouchableOpacity onPress={() => router.push("/splash")}>
-          <Text style={styles.navText}>prev</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/splash")}
+          accessibilityRole="button"
+          accessibilityLabel="Go to previous screen"
+          style={({ pressed }) => [
+            styles.navButton,
+            pressed && { opacity: 0.7 },
+          ]}
+        >
+          <Text style={styles.navText}>Prev</Text>
         </TouchableOpacity>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity onPress={() => router.push("/Onboarding/step2")}>
+        <TouchableOpacity
+          onPress={() => router.push("/Onboarding/step2")}
+          accessibilityRole="button"
+          accessibilityLabel="Go to next onboarding step"
+          style={({ pressed }) => [
+            styles.nextButton,
+            pressed && { backgroundColor: "#1976d2" },
+          ]}
+        >
           <Text style={styles.nextText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -237,32 +267,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#E4E0F5",
     padding: 24,
     borderRadius: 24,
+    shadowColor: "#90caf9",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 260,
+    height: 260,
   },
   textSection: {
     alignItems: "center",
-    marginTop: 24,
+    marginTop: 16,
     zIndex: 1,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#000",
+    color: "#7b1fa2", // changed to a vibrant purple
+    letterSpacing: 0.5,
+    marginBottom: 6,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#6B7280",
+    fontSize: 17,
+    color: "#4b2996", // changed to a deeper purple
     textAlign: "center",
     marginTop: 8,
+    fontWeight: "500",
+    letterSpacing: 0.2,
   },
   dotsRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
+    marginTop: 18,
     zIndex: 1,
   },
   dot: {
@@ -273,24 +312,50 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: "#000",
+    backgroundColor: "#7b1fa2", // changed to match the new accent color
+    width: 18,
+    height: 12,
+    borderRadius: 6,
   },
   buttonRow: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "flex-end",
     alignItems: "center",
     paddingHorizontal: 16,
-    marginTop: 24,
+    marginTop: 28,
     zIndex: 1,
   },
+  navButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    backgroundColor: "#e3f2fd",
+    shadowColor: "#90caf9",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  nextButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 16,
+    backgroundColor: "#42a5f5",
+    shadowColor: "#42a5f5",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 3,
+  },
   nextText: {
-    color: "#000",
+    color: "#7b1fa2",
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
   navText: {
     fontSize: 16,
-    color: "#000",
+    color: "#7b1fa2", // changed to match the new accent color
+    fontWeight: "600",
   },
 });
