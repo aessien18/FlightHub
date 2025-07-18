@@ -63,28 +63,68 @@ export default function Step1() {
         <View style={styles.dot} />
       </View>
       <View style={styles.buttonRow}>
+        {/* Prev button on the far left */}
         <TouchableOpacity
           onPress={() => router.push("/splash")}
           accessibilityRole="button"
           accessibilityLabel="Go to previous screen"
           style={({ pressed }) => [
             styles.navButton,
-            pressed && { opacity: 0.7 },
+            { alignSelf: "flex-start" },
+            pressed && { opacity: 0.7, backgroundColor: "#d1c4e9" },
           ]}
         >
           <Text style={styles.navText}>Prev</Text>
         </TouchableOpacity>
+
+        {/* Spacer to push Next to the far right */}
         <View style={{ flex: 1 }} />
+
+        {/* Next button on the far right */}
         <TouchableOpacity
           onPress={() => router.push("/Onboarding/step2")}
           accessibilityRole="button"
           accessibilityLabel="Go to next onboarding step"
           style={({ pressed }) => [
             styles.nextButton,
+            { alignSelf: "flex-end" },
             pressed && { backgroundColor: "#1976d2" },
           ]}
         >
-          <Text style={styles.nextText}>Next</Text>
+          <Text
+            style={[
+              styles.nextText,
+              {
+                color: "#7b1fa2", // purple color for "Next"
+                textShadowColor: "#fff",
+                textShadowOffset: { width: 0, height: 1 },
+                textShadowRadius: 2,
+              },
+            ]}
+          >
+            Next
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Skip button above the row, centered */}
+      <View style={styles.skipRow}>
+        <TouchableOpacity
+          onPress={() => router.replace("/auth/Login")}
+          accessibilityRole="button"
+          accessibilityLabel="Skip onboarding and go to login"
+          style={({ pressed }) => [
+            styles.navButton,
+            {
+              backgroundColor: "#fffbe7",
+              borderColor: "#ffe082",
+              alignSelf: "center",
+              marginBottom: 6,
+            },
+            pressed && { opacity: 0.7, backgroundColor: "#ffe082" },
+          ]}
+        >
+          <Text style={[styles.navText, { color: "#fbc02d" }]}>Skip</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -335,6 +375,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: "#b3e5fc",
   },
   nextButton: {
     paddingVertical: 12,
@@ -346,16 +388,45 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 3,
+    // Add a subtle border for focus
+    borderWidth: 1.5, // purple color for "Next"
+    borderColor: "#b3e5fc",
   },
   nextText: {
-    color: "#7b1fa2",
+    cing: 0.5,
+    color: "#7b1fa2", // purple color for "Next"
     fontSize: 18,
+    set: { width: 0, height: 1 },
     fontWeight: "700",
     letterSpacing: 0.5,
+    textShadowColor: "#fff",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   navText: {
     fontSize: 16,
-    color: "#7b1fa2", // changed to match the new accent color
+    color: "#7b1fa2",
     fontWeight: "600",
+  },
+  swipeHintContainer: {
+    position: "absolute",
+    bottom: 18,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    zIndex: 2,
+  },
+  swipeHintText: {
+    color: "#7b1fa2",
+    fontSize: 15,
+    opacity: 0.7,
+    fontWeight: "600",
+    letterSpacing: 0.2,
+  },
+  skipRow: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 12,
+    zIndex: 1,
   },
 });

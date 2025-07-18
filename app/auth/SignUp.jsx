@@ -1,14 +1,18 @@
 import { FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -62,140 +66,156 @@ export default function SignUp() {
         throw new Error(errorText);
       }
 
-      setSuccess("Signup successful! Please login.");
-      setTimeout(() => router.replace("/auth/Login"), 1500);
+      setSuccess("Signup successful! Redirecting to home...");
+      await AsyncStorage.setItem("userToken", "dummyToken"); // Replace with real token if available
+      router.replace("/home");
     } catch (err) {
-      console.log("SIGNUP ERROR:", err);
+      console.log("Signup error:", err);
       setError("Network error");
     }
     setLoading(false);
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      keyboardShouldPersistTaps="handled"
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "#f5f3ff" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}
     >
-      <View style={styles.container}>
-        <Text style={styles.title}>SIGN UP</Text>
-        <View style={styles.underline} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.container}>
+            <View style={styles.logoContainer}>
+              <FontAwesome name="plane" size={48} color="#7b1fa2" />
+            </View>
+            <Text style={styles.title}>Create Account</Text>
+            <View style={styles.underline} />
 
-        <View style={styles.form}>
-          <TextInput
-            placeholder="First Name"
-            placeholderTextColor="#7b1fa2"
-            style={styles.input}
-            value={firstName}
-            onChangeText={setFirstName}
-            autoCapitalize="words"
-            accessibilityLabel="First Name"
-            returnKeyType="next"
-          />
-          <TextInput
-            placeholder="Last Name"
-            placeholderTextColor="#7b1fa2"
-            style={styles.input}
-            value={lastName}
-            onChangeText={setLastName}
-            autoCapitalize="words"
-            accessibilityLabel="Last Name"
-            returnKeyType="next"
-          />
-          <TextInput
-            placeholder="Email Address"
-            placeholderTextColor="#7b1fa2"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            accessibilityLabel="Email Address"
-            returnKeyType="next"
-          />
-
-          {/* Password input with icon */}
-          <View style={{ position: "relative" }}>
-            <TextInput
-              placeholder="Create Password"
-              placeholderTextColor="#7b1fa2"
-              secureTextEntry={!showPassword}
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              accessibilityLabel="Create Password"
-              returnKeyType="next"
-            />
-            <TouchableOpacity
-              style={{ position: "absolute", right: 20, top: 18 }}
-              onPress={() => setShowPassword((prev) => !prev)}
-              accessibilityLabel="Toggle password visibility"
-            >
-              <FontAwesome
-                name={showPassword ? "eye" : "lock"}
-                size={20}
-                color="#7b1fa2"
+            <View style={styles.form}>
+              <TextInput
+                placeholder="First Name"
+                placeholderTextColor="#b39ddb"
+                style={styles.input}
+                value={firstName}
+                onChangeText={setFirstName}
+                autoCapitalize="words"
+                accessibilityLabel="First Name"
+                returnKeyType="next"
               />
-            </TouchableOpacity>
-          </View>
-
-          {/* Confirm Password input with icon */}
-          <View style={{ position: "relative" }}>
-            <TextInput
-              placeholder="Confirm Password"
-              placeholderTextColor="#7b1fa2"
-              secureTextEntry={!showConfirmPassword}
-              style={styles.input}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              accessibilityLabel="Confirm Password"
-              returnKeyType="done"
-              onSubmitEditing={handleSignUp}
-            />
-            <TouchableOpacity
-              style={{ position: "absolute", right: 20, top: 18 }}
-              onPress={() => setShowConfirmPassword((prev) => !prev)}
-              accessibilityLabel="Toggle confirm password visibility"
-            >
-              <FontAwesome
-                name={showConfirmPassword ? "eye" : "lock"}
-                size={20}
-                color="#7b1fa2"
+              <TextInput
+                placeholder="Last Name"
+                placeholderTextColor="#b39ddb"
+                style={styles.input}
+                value={lastName}
+                onChangeText={setLastName}
+                autoCapitalize="words"
+                accessibilityLabel="Last Name"
+                returnKeyType="next"
               />
-            </TouchableOpacity>
-          </View>
-          {/* Password hint */}
-          {password.length > 0 && password.length < 6 && (
-            <Text style={styles.passwordHint}>
-              Password must be at least 6 characters.
+              <TextInput
+                placeholder="Email Address"
+                placeholderTextColor="#b39ddb"
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                accessibilityLabel="Email Address"
+                returnKeyType="next"
+              />
+
+              {/* Password input with icon */}
+              <View style={styles.inputIconWrapper}>
+                <TextInput
+                  placeholder="Create Password"
+                  placeholderTextColor="#b39ddb"
+                  secureTextEntry={!showPassword}
+                  style={[styles.input, { paddingRight: 40 }]}
+                  value={password}
+                  onChangeText={setPassword}
+                  accessibilityLabel="Create Password"
+                  returnKeyType="next"
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                  accessibilityLabel="Toggle password visibility"
+                >
+                  <FontAwesome
+                    name={showPassword ? "eye" : "lock"}
+                    size={20}
+                    color="#7b1fa2"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Confirm Password input with icon */}
+              <View style={styles.inputIconWrapper}>
+                <TextInput
+                  placeholder="Confirm Password"
+                  placeholderTextColor="#b39ddb"
+                  secureTextEntry={!showConfirmPassword}
+                  style={[styles.input, { paddingRight: 40 }]}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  accessibilityLabel="Confirm Password"
+                  returnKeyType="done"
+                  onSubmitEditing={handleSignUp}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowConfirmPassword((prev) => !prev)}
+                  accessibilityLabel="Toggle confirm password visibility"
+                >
+                  <FontAwesome
+                    name={showConfirmPassword ? "eye" : "lock"}
+                    size={20}
+                    color="#7b1fa2"
+                  />
+                </TouchableOpacity>
+              </View>
+              {/* Password hint */}
+              {password.length > 0 && password.length < 6 && (
+                <Text style={styles.passwordHint}>
+                  Password must be at least 6 characters.
+                </Text>
+              )}
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
+              {success ? (
+                <Text style={styles.successText}>{success}</Text>
+              ) : null}
+              <TouchableOpacity
+                style={[styles.button, loading && { opacity: 0.6 }]}
+                onPress={handleSignUp}
+                disabled={loading}
+                accessibilityLabel="Sign up"
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>Sign up</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.bottomText}>
+              Already have an account?{" "}
+              <Text
+                style={styles.link}
+                onPress={() => router.replace("/auth/Login")}
+                accessibilityRole="button"
+                accessibilityLabel="Go to Login"
+              >
+                Login
+              </Text>
             </Text>
-          )}
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-          {success ? <Text style={styles.successText}>{success}</Text> : null}
-          <TouchableOpacity
-            style={[styles.button, loading && { opacity: 0.6 }]}
-            onPress={handleSignUp}
-            disabled={loading}
-            accessibilityLabel="Sign up"
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Sign up</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.bottomText}>
-          Already have an Account?{" "}
-          <Text
-            style={styles.link}
-            onPress={() => router.replace("/auth/Login")}
-          >
-            Login
-          </Text>
-        </Text>
-      </View>
-    </ScrollView>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -211,12 +231,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#f5f3ff",
   },
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 30,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 40,
-    color: "#4b2996",
+    marginTop: 10,
+    color: "#7b1fa2",
     letterSpacing: 0.5,
   },
   underline: {
@@ -225,9 +250,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#a084ca",
     alignSelf: "center",
     marginVertical: 12,
+    borderRadius: 2,
   },
   form: {
-    backgroundColor: "#e3d6fa",
+    backgroundColor: "#fff",
     borderRadius: 24,
     padding: 28,
     marginVertical: 12,
@@ -246,8 +272,20 @@ const styles = StyleSheet.create({
     color: "#4b2996",
     marginVertical: 10,
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 17,
     letterSpacing: 0.3,
+  },
+  inputIconWrapper: {
+    position: "relative",
+    width: "100%",
+    justifyContent: "center",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 10,
+    top: 18,
+    padding: 4,
+    zIndex: 2,
   },
   passwordHint: {
     color: "#4b2996",
@@ -276,11 +314,17 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     marginTop: 14,
+    marginBottom: 4,
+    shadowColor: "#7b1fa2",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2,
   },
   buttonText: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 19,
     letterSpacing: 0.5,
   },
   bottomText: {

@@ -1,9 +1,7 @@
 import { router } from "expo-router";
-import { useEffect } from "react";
 import {
   Dimensions,
   Image,
-  Platform,
   Pressable,
   StatusBar,
   StyleSheet,
@@ -14,18 +12,10 @@ import {
 const { width, height } = Dimensions.get("window");
 
 export default function SplashScreen() {
-  // Optional: Auto-navigate after a delay (skip if you want only manual navigation)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/Onboarding/step1");
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={Platform.OS === "ios" ? "dark-content" : "default"}
+        barStyle="dark-content" // changed to always dark for white background
         backgroundColor="#f5f0fa"
       />
       {/* Decorative background */}
@@ -40,20 +30,23 @@ export default function SplashScreen() {
       <View style={styles.smallDot3} />
 
       <Image
-        source={require("../assets/flight logo.png")}
+        source={require("../assets/Flighty logo.png")}
         style={styles.image}
         resizeMode="contain"
         accessibilityLabel="FlightHub Logo"
       />
 
       <Text style={styles.title} accessibilityRole="header">
-        Welcome to Airwise
+        Welcome to <Text style={styles.brand}>FlightHub</Text>
       </Text>
 
       <Pressable
         style={({ pressed }) => [
           styles.button,
-          pressed && { backgroundColor: "#7e57c2" },
+          pressed && {
+            backgroundColor: "#7e57c2",
+            transform: [{ scale: 0.97 }],
+          },
         ]}
         onPress={() => router.push("/Onboarding/step1")}
         accessibilityRole="button"
@@ -68,6 +61,7 @@ export default function SplashScreen() {
       >
         Your All-in-One Flight Companion!
       </Text>
+      <Text style={styles.hint}>Swipe or tap to continue</Text>
     </View>
   );
 }
@@ -201,13 +195,20 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: "900",
     color: "#7e57c2",
-    marginBottom: 28,
+    marginBottom: 18,
     zIndex: 1,
     letterSpacing: 1,
     textShadowColor: "#fff",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
     textAlign: "center",
+  },
+  brand: {
+    color: "#42a5f5",
+    fontWeight: "900",
+    textShadowColor: "#fff",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   button: {
     backgroundColor: "#9575cd",
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     alignSelf: "center",
     minWidth: 220,
+    marginTop: 8,
   },
   buttonText: {
     color: "#fff",
@@ -245,6 +247,16 @@ const styles = StyleSheet.create({
     textShadowColor: "#fff",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
+    textAlign: "center",
+  },
+  hint: {
+    fontSize: 15,
+    color: "#7b1fa2",
+    opacity: 0.7,
+    fontWeight: "600",
+    marginTop: 10,
+    letterSpacing: 0.2,
+    zIndex: 1,
     textAlign: "center",
   },
 });

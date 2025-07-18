@@ -74,27 +74,27 @@ export default function Step3() {
             onPress={() => router.replace("/auth/Login")}
             style={({ pressed }) => [
               styles.doneButton,
-              pressed && { backgroundColor: "#7b1fa2" },
+              pressed && { backgroundColor: "#4b2996" },
             ]}
             accessibilityRole="button"
             accessibilityLabel="Finish onboarding and go to login"
           >
-            <Text style={styles.doneText}>Done</Text>
+            <Text
+              style={[
+                styles.doneText,
+                {
+                  color: "#fff",
+                  textShadowColor: "#7b1fa2",
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2,
+                },
+              ]}
+            >
+              Done
+            </Text>
           </Pressable>
         </View>
       </View>
-
-      <Pressable
-        onPress={() => router.replace("/splash")}
-        accessibilityRole="button"
-        accessibilityLabel="Skip onboarding"
-        style={({ pressed }) => [
-          styles.skipButton,
-          pressed && { opacity: 0.7 },
-        ]}
-      >
-        <Text style={styles.skip}>Skip</Text>
-      </Pressable>
     </View>
   );
 }
@@ -273,8 +273,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#7b1fa2",
     paddingVertical: 10,
     paddingHorizontal: 28,
-    borderRadius: 16,
-    marginLeft: 52, // increased from 12 to move "Done" further right // increased from 12 to move "Done" further right
+    borderRadius: 36,
+    marginLeft: 70, // increased from 12 to move "Done" further right // increased from 12 to move "Done" further right
     shadowColor: "#7b1fa2",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
@@ -286,16 +286,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "700",
     letterSpacing: 0.5,
-  },
-  skipButton: {
-    marginTop: 16,
-    alignSelf: "center",
-  },
-  skip: {
-    fontSize: 15,
-    color: "#aaa",
-    zIndex: 1,
-    textDecorationLine: "underline",
-    fontWeight: "500",
   },
 });
