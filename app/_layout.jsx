@@ -6,7 +6,7 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="HomeScreens/homescreen" />
-
+        <Stack.Screen name = "screens" />
         <Stack.Screen
           name="add-flight" 
           options={{
