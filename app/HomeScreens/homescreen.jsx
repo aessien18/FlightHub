@@ -91,7 +91,7 @@ const FlightCard = ({ flight, onPress, onLongPress, isSelectedForDelete, onDelet
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "on time":
-      case "scheduled":
+      case "scheduled": // "Scheduled" still uses green color
         return "#00C851"
       case "delayed":
         return "#FFC107"
@@ -100,15 +100,17 @@ const FlightCard = ({ flight, onPress, onLongPress, isSelectedForDelete, onDelet
       case "cancelled":
         return "#F44336"
       default:
-        return "#00C851" // Default to green for "On Time"
+        return "#00C851" // Default to green for "On Time" or unknown
     }
   }
 
   const getDisplayStatus = (status) => {
+    // If the status is "scheduled" (case-insensitive), return "Scheduled" directly.
     if (status?.toLowerCase() === "scheduled") {
-      return "On Time"
+      return "Scheduled"
     }
-    return status || "On Time" // Default to "On Time"
+    // For all other statuses, return the status as is, or default to "On Time" if null/undefined.
+    return status || "On Time"
   }
 
   // Extract airline code from flight number (e.g., "UA2381" -> "UA")
