@@ -224,7 +224,8 @@ const FlightDetailsScreen = () => {
                 <View style={styles.goodToKnowItem}>
                     <View style={styles.goodToKnowBullet} />
                     <Text style={styles.goodToKnowText}>
-                        <Text style={styles.goodToKnowDelayText}>Pro Tip:</Text> Keep an eye on your gate number, as changes can happen.
+                        <Text style={styles.goodToKnowDelayText}>Pro Tip:</Text>
+                        <Text> Keep an eye on your gate number, as changes can happen.</Text>
                     </Text>
                 </View>
                 <View style={styles.goodToKnowItem}>

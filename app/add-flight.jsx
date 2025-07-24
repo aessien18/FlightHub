@@ -1,23 +1,23 @@
-"use client"
+
 
 import { Ionicons } from "@expo/vector-icons"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { router } from "expo-router"
 import { useMemo, useState } from "react"
 import {
-    ActivityIndicator,
-    FlatList,
-    Keyboard,
-    Platform,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native"
 
-// --- Dummy Data for Suggestions (keeping your existing data) ---
+// --- Dummy Data for Suggestions  ---
 const dummySuggestions = [
   { id: "airline-awa", type: "airline", name: "Africa World Airlines", code: "AW", iata: "AWA" },
   { id: "airline-vne", type: "airline", name: "Venezolana", code: "AW", iata: "VNE" },
@@ -38,7 +38,7 @@ export default function EnhancedAddFlightModal() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Filter suggestions based on search text (keeping your existing logic)
+  
   const filteredSuggestions = useMemo(() => {
     if (!searchText) {
       return []
@@ -60,36 +60,36 @@ export default function EnhancedAddFlightModal() {
     const statusLower = status?.toLowerCase() || ""
 
     if (statusLower.includes("on time") || statusLower.includes("scheduled")) {
-      return "#10B981" // Green
+      return "#10B981" 
     } else if (statusLower.includes("delay") || statusLower.includes("late")) {
-      return "#EF4444" // Red
+      return "#EF4444" 
     } else if (statusLower.includes("board") || statusLower.includes("gate")) {
-      return "#3B82F6" // Blue
+      return "#3B82F6" 
     } else if (statusLower.includes("depart") || statusLower.includes("airborne")) {
-      return "#6B7280" // Gray
+      return "#6B7280" 
     } else if (statusLower.includes("cancel")) {
-      return "#EF4444" // Red
+      return "#EF4444" 
     } else if (statusLower.includes("arrived") || statusLower.includes("landed")) {
-      return "#10B981" // Green
+      return "#10B981" 
     } else {
-      return "#6B7280" // Default gray
+      return "#6B7280" 
     }
   }
 
-  // Enhanced status background color
+  
   const getStatusBackgroundColor = (status) => {
     const statusLower = status?.toLowerCase() || ""
 
     if (statusLower.includes("on time") || statusLower.includes("scheduled")) {
-      return "#DCFCE7" // Light green
+      return "#DCFCE7" 
     } else if (statusLower.includes("delay") || statusLower.includes("late")) {
-      return "#FEE2E2" // Light red
+      return "#FEE2E2"  
     } else if (statusLower.includes("board") || statusLower.includes("gate")) {
-      return "#DBEAFE" // Light blue
+      return "#DBEAFE" 
     } else if (statusLower.includes("cancel")) {
-      return "#FEE2E2" // Light red
+      return "#FEE2E2" 
     } else {
-      return "#F3F4F6" // Light gray
+      return "#F3F4F6" 
     }
   }
 
@@ -106,7 +106,7 @@ export default function EnhancedAddFlightModal() {
     return `${hours}h ${minutes}m`
   }
 
-  // Enhanced Error Display Component (keeping your existing structure)
+  //  Error Display Component 
   const ErrorDisplay = ({ error, onRetry }) => {
     const getErrorIcon = () => {
       switch (error.type) {
@@ -161,7 +161,7 @@ export default function EnhancedAddFlightModal() {
     )
   }
 
-  // Fixed performSearch function with proper error handling
+  
   const performSearch = async (query) => {
     Keyboard.dismiss()
     setError(null)
@@ -260,7 +260,7 @@ export default function EnhancedAddFlightModal() {
     } catch (err) {
       console.error("Fetch error:", err)
 
-      // Handle network and other errors
+      // Handle network errors
       let errorInfo = {
         type: "network",
         title: "Connection Error",
@@ -304,7 +304,10 @@ export default function EnhancedAddFlightModal() {
     }
   }
 
-  // Enhanced renderFlightItem function with improved design
+
+  
+
+  
   const renderFlightItem = ({ item }) => {
     const isSelected =
       selectedFlight &&
@@ -415,7 +418,7 @@ export default function EnhancedAddFlightModal() {
     )
   }
 
-  // Function to render each suggestion item (keeping your existing logic)
+  // Function to render each suggestion item 
   const renderSuggestionItem = ({ item }) => (
     <TouchableOpacity style={styles.suggestionItem} onPress={() => selectSuggestion(item)}>
       <Ionicons
@@ -445,7 +448,7 @@ export default function EnhancedAddFlightModal() {
     </TouchableOpacity>
   )
 
-  // Function to handle selection of a suggestion (keeping your existing logic)
+    // Funtion to handle selection of a suggestion
   const selectSuggestion = (item) => {
     setSearchText(item.type === "flight_number" ? item.number : item.name)
     if (item.type === "flight_number") {
@@ -453,7 +456,7 @@ export default function EnhancedAddFlightModal() {
     }
   }
 
-  // Helper to format date for display (keeping your existing logic)
+  // Helper to format date for display 
   const formatDate = (date) => {
     const options = {
       timeZone: "Africa/Accra",

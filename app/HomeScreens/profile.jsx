@@ -214,7 +214,7 @@ export default function ProfileScreen() {
                         {/* FlightHub Friends button - now opens the new modal */}
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={openFriendsModal} // Added onPress handler
+                            onPress={openFriendsModal}
                         >
                             <View style={styles.buttonContent}>
                                 <MaterialIcons
@@ -410,14 +410,14 @@ export default function ProfileScreen() {
 
                     {/* PRO UPGRADE CARD */}
                     <View style={styles.proCard}>
-                        <View style={styles.proContent}>
+                        <TouchableOpacity style={styles.proContent}>
                             <View style={styles.proLeft}>
                                 <Text style={styles.proBadge}>PRO</Text>
                                 <Text style={styles.proTitle}>Complete Your Map & Stats</Text>
                                 <Text style={styles.proSubtitle}>Upgrade to add flights older than 12 months.</Text>
                             </View>
                             <Text style={styles.proArrow}>{'>'}</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
                     {/* PAST FLIGHTS SECTION */}
@@ -494,15 +494,15 @@ export default function ProfileScreen() {
 
             {/* NEW: FlightHub Friends Modal */}
             <Modal
-                animationType="slide" // Slide up from bottom
+                animationType="slide"
                 transparent={true}
                 visible={isFriendsModalVisible}
                 onRequestClose={closeFriendsModal}
             >
                 <TouchableOpacity
-                    style={styles.modalOverlay} // Reuse modalOverlay style
+                    style={styles.modalOverlay}
                     activeOpacity={1}
-                    onPressOut={closeFriendsModal} // Close if clicked outside
+                    onPressOut={closeFriendsModal}
                 >
                     <View style={styles.friendsModalContainer}>
                         {/* Close Button */}
@@ -798,7 +798,7 @@ const styles = StyleSheet.create({
         color: 'rgba(255,255,255,0.8)',
     },
     allDelayStatsButton: {
-        backgroundColor: 'rgba(0,0:0,0.2)',
+        backgroundColor: 'rgba(0,0,0,0.2)',
         borderRadius: 10,
         padding: 10,
         flexDirection: 'row',
@@ -832,15 +832,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: 15,
+        marginBottom: 5,
     },
     aircraftTitle: {
         fontSize: 16,
         color: '#1e40af',
-        fontWeight: '600',
+        fontWeight: 'bold',
     },
     aircraftShareButton: {
-        backgroundColor: 'rgba(30, 64, 175, 0.2)',
+        backgroundColor: 'rgba(30,64,175,0.1)',
         borderRadius: 15,
         width: 28,
         height: 28,
@@ -848,33 +848,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     aircraftContent: {
-        marginBottom: 20,
-        zIndex: 2,
+        marginBottom: 15,
     },
     aircraftName: {
-        fontSize: 28,
+        fontSize: 24,
         color: '#1e40af',
         fontWeight: 'bold',
         marginBottom: 5,
     },
     aircraftSubtitle: {
-        fontSize: 14,
-        color: '#64748b',
+        fontSize: 13,
+        color: '#4f46e5',
     },
     aircraftBackground: {
         position: 'absolute',
+        bottom: -10,
         right: -10,
-        bottom: 20,
-        zIndex: 1,
+        opacity: 0.1,
+        transform: [{ rotate: '-20deg' }],
     },
     allAircraftStatsButton: {
-        backgroundColor: 'rgba(30, 64, 175, 0.2)',
+        backgroundColor: 'rgba(30,64,175,0.1)',
         borderRadius: 10,
-        padding: 12,
+        padding: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        zIndex: 2,
     },
     allAircraftStatsText: {
         color: '#1e40af',
@@ -887,15 +886,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     proCard: {
-        backgroundColor: '#F3E8FF',
+        backgroundColor: '#F0F0F0',
         borderRadius: 15,
         padding: 20,
         marginBottom: 20,
-        shadowColor: "#a855f7",
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 4,
+        elevation: 3,
     },
     proContent: {
         flexDirection: 'row',
@@ -904,35 +903,41 @@ const styles = StyleSheet.create({
     },
     proLeft: {
         flex: 1,
+        marginRight: 10,
     },
     proBadge: {
-        fontSize: 12,
-        color: '#a855f7',
+        backgroundColor: '#FFD700',
+        color: '#333',
+        fontSize: 10,
         fontWeight: 'bold',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 5,
+        alignSelf: 'flex-start',
         marginBottom: 5,
     },
     proTitle: {
-        fontSize: 16,
-        color: '#7c3aed',
-        fontWeight: '600',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
         marginBottom: 5,
     },
     proSubtitle: {
-        fontSize: 14,
-        color: '#64748b',
+        fontSize: 13,
+        color: '#666',
     },
     proArrow: {
-        color: '#a855f7',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    pastFlightsSection: {
-        marginBottom: 30,
-    },
-    pastFlightsTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#1f2937',
+        color: '#333',
+    },
+    pastFlightsSection: {
+        marginBottom: 20,
+    },
+    pastFlightsTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
         marginBottom: 15,
     },
     flightTableHeader: {
@@ -940,61 +945,50 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#e5e7eb',
+        borderBottomColor: '#f0f0f0',
         marginBottom: 10,
     },
     tableHeaderText: {
         fontSize: 12,
-        fontWeight: '600',
-        color: '#6b7280',
+        fontWeight: 'bold',
+        color: '#999',
         flex: 1,
         textAlign: 'center',
     },
     emptyFlights: {
-        paddingVertical: 40,
         alignItems: 'center',
+        paddingVertical: 30,
     },
     emptyFlightsText: {
-        fontSize: 14,
-        color: '#9ca3af',
-        fontStyle: 'italic',
+        fontSize: 16,
+        color: '#999',
     },
-    passportText: {
-        color: 'white',
-        marginBottom: 5,
-        fontSize: 14,
-    },
+    // Custom Share Menu Modal Styles
     modalOverlay: {
         flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     shareMenuContainer: {
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingHorizontal: 20,
-        paddingBottom: Platform.OS === 'ios' ? 30 : 20,
-        paddingTop: 10,
+        paddingBottom: Platform.OS === 'ios' ? 30 : 20, // Adjust for iOS safe area
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 20,
     },
     shareMenuHandle: {
         width: 40,
         height: 5,
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#ccc',
         borderRadius: 2.5,
-        marginBottom: 15,
+        marginVertical: 10,
     },
     shareMenuTitle: {
         fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
+        fontWeight: 'bold',
         marginBottom: 20,
+        color: '#333',
     },
     shareOptionButton: {
         flexDirection: 'row',
@@ -1005,58 +999,49 @@ const styles = StyleSheet.create({
         borderBottomColor: '#f0f0f0',
     },
     shareOptionText: {
-        fontSize: 16,
-        color: '#333',
+        fontSize: 18,
         marginLeft: 15,
-        fontWeight: '500',
+        color: '#333',
     },
     shareMenuCancelButton: {
+        marginTop: 20,
         width: '100%',
         paddingVertical: 15,
-        marginTop: 10,
         backgroundColor: '#f0f0f0',
         borderRadius: 10,
         alignItems: 'center',
     },
     shareMenuCancelButtonText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#333',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#007AFF',
     },
-    // NEW STYLES FOR FLIGHTHUB FRIENDS MODAL
+    // FlightHub Friends Modal Styles
     friendsModalContainer: {
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingHorizontal: 20,
-        paddingBottom: Platform.OS === 'ios' ? 30 : 20,
-        paddingTop: 20,
+        paddingVertical: 30,
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 20,
+        width: '100%',
     },
     friendsModalCloseButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: 15,
+        right: 15,
         padding: 5,
-        zIndex: 1, // Ensure it's above other content
     },
     friendAvatarsContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center',
         marginBottom: 20,
-        marginTop: 10,
     },
     friendAvatar: {
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: '#e0e0e0', // Placeholder background
+        backgroundColor: '#e0e0e0',
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 5,
@@ -1064,13 +1049,13 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
-        position: 'relative',
     },
     avatarEmoji: {
         fontSize: 30,
+        lineHeight: 35, // Adjust line height to center emoji
     },
     avatarPlane: {
         position: 'absolute',
@@ -1079,27 +1064,28 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 2,
-        transform: [{ rotate: '45deg' }], // Rotate plane icon
+        borderWidth: 1,
+        borderColor: '#ccc',
     },
     friendsModalTitle: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
         marginBottom: 10,
+        color: '#333',
         textAlign: 'center',
     },
     friendsModalDescription: {
-        fontSize: 15,
+        fontSize: 16,
         color: '#666',
         textAlign: 'center',
         marginBottom: 15,
         lineHeight: 22,
     },
     friendsModalSubDescription: {
-        fontSize: 13,
+        fontSize: 14,
         color: '#888',
         textAlign: 'center',
-        marginBottom: 25,
+        marginBottom: 30,
         fontStyle: 'italic',
     },
     addFriendButton: {
@@ -1108,7 +1094,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         paddingVertical: 15,
         paddingHorizontal: 30,
-        borderRadius: 12,
+        borderRadius: 30,
         shadowColor: '#007AFF',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -1120,7 +1106,7 @@ const styles = StyleSheet.create({
     },
     addFriendButtonText: {
         color: 'white',
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });

@@ -14,8 +14,6 @@ export default function Layout() {
             headerShown: false,
           }}
         />
-        
-      
       </Stack>
     </GestureHandlerRootView>
   );
