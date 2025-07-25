@@ -1,9 +1,15 @@
+// Your existing file: SettingsScreen.tsx
+
 "use client"
 
 import { Ionicons } from "@expo/vector-icons"
 import { useRouter } from "expo-router"
 import type React from "react"
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, Switch } from "react-native";
+
+// Import your theme context and colors
+import { useTheme, lightColors, darkColors } from './ThemeContext';
+
 
 interface SettingsItemProps {
   icon: string
@@ -19,45 +25,57 @@ interface SectionHeaderProps {
 
 const SettingsScreen = () => {
   const router = useRouter()
+  // Use the theme hook to get the current theme and toggle function
+  const { theme, toggleTheme } = useTheme();
+  // Select the appropriate color palette based on the current theme
+  const colors = theme === 'light' ? lightColors : darkColors;
 
   const SettingsItem = ({ icon, label, onPress, showChevron = true, customContent }: SettingsItemProps) => (
-    <TouchableOpacity style={styles.settingsItem} onPress={onPress}>
+    <TouchableOpacity style={[styles.settingsItem, { borderBottomColor: colors.itemBorder }]} onPress={onPress}>
       <View style={styles.settingsItemLeft}>
-        <Ionicons name={icon as any} size={24} color="#D1D5DB" style={styles.icon} />
-        <Text style={styles.settingsItemText}>{label}</Text>
+        {/* Icon color changes based on theme */}
+        <Ionicons name={icon as any} size={24} color={colors.iconColor} style={styles.icon} />
+        {/* Text color changes based on theme */}
+        <Text style={[styles.settingsItemText, { color: colors.text }]}>{label}</Text>
       </View>
-      {customContent || (showChevron && <Ionicons name="chevron-forward" size={20} color="#6B7280" />)}
+      {/* Chevron color changes based on theme */}
+      {customContent || (showChevron && <Ionicons name="chevron-forward" size={20} color={colors.sectionHeader} />)}
     </TouchableOpacity>
   )
 
-  const SectionHeader = ({ title }: SectionHeaderProps) => <Text style={styles.sectionHeader}>{title}</Text>
+  const SectionHeader = ({ title }: SectionHeaderProps) => <Text style={[styles.sectionHeader, { color: colors.sectionHeader }]}>{title}</Text>
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+    // Container background changes based on theme
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* StatusBar style changes based on theme */}
+      <StatusBar barStyle={theme === 'dark' ? "light-content" : "dark-content"} backgroundColor={colors.headerBackground} />
 
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
+      {/* Header background and text color changes based on theme */}
+      <View style={[styles.header, { backgroundColor: colors.headerBackground }]}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Settings</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.doneButton}>Done</Text>
+          <Text style={[styles.doneButton, { color: colors.doneButton }]}>Done</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* FlightHub Pro Section */}
         <View style={styles.proSection}>
-          <TouchableOpacity style={styles.proCard} onPress={() => router.push("./flighthub-pro-screen" as any)}>
+          {/* ProCard background and border color changes based on theme */}
+          <TouchableOpacity style={[styles.proCard, { backgroundColor: colors.proCardBackground, borderColor: colors.proCardBorder }]} onPress={() => router.push("/screens/Pro-screen")}> 
             <View style={styles.proCardLeft}>
               <View style={styles.proBadge}>
                 <Text style={styles.proBadgeText}>PRO</Text>
               </View>
               <View style={styles.proInfo}>
-                <Text style={styles.proTitle}>FlightHub Pro</Text>
-                <Text style={styles.proSubtitle}>1 complimentary flight remaining</Text>
+                {/* Pro title and subtitle colors change based on theme */}
+                <Text style={[styles.proTitle, { color: colors.proTitle }]}>FlightHub Pro</Text>
+                <Text style={[styles.proSubtitle, { color: colors.proSubtitle }]}>1 complimentary flight remaining</Text>
               </View>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+            <Ionicons name="chevron-forward" size={20} color={colors.sectionHeader} />
           </TouchableOpacity>
         </View>
 
@@ -134,6 +152,23 @@ const SettingsScreen = () => {
             onPress={() => router.push("./app-icon-settings" as any)}
           />
           <SettingsItem icon="list-outline" label="Units" onPress={() => router.push("./unit-screen" as any)} />
+          {/* NEW: Theme Toggle Item */}
+          <SettingsItem
+            icon={theme === 'dark' ? "moon-outline" : "sunny-outline"} // Icon changes with theme
+            label="Theme"
+            showChevron={false} // No chevron for the switch
+            customContent={
+              <Switch
+                // Track and thumb colors for the switch
+                trackColor={{ false: "#767577", true: Platform.OS === 'android' ? "#81b0ff" : "#32ade6" }} // Adjusted for iOS blue
+                thumbColor={Platform.OS === 'android' ? "#f4f3f4" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleTheme} // Call toggleTheme when switch is changed
+                value={theme === 'dark'} // Switch is 'on' when theme is dark
+              />
+            }
+            onPress={toggleTheme} // Pressing the entire row also toggles the theme
+          />
         </View>
 
         {/* MANAGE Section */}
@@ -189,7 +224,8 @@ const SettingsScreen = () => {
 
         {/* Footer Quote */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>{"Come fly with me, let's fly, let's fly away"}</Text>
+          {/* Footer text color changes based on theme */}
+          <Text style={[styles.footerText, { color: colors.sectionHeader }]}>{"Come fly with me, let's fly, let's fly away"}</Text>
         </View>
 
         {/* Bottom spacing */}
@@ -198,7 +234,8 @@ const SettingsScreen = () => {
 
       {/* Home Indicator */}
       <View style={styles.homeIndicator}>
-        <View style={styles.homeIndicatorBar} />
+        {/* Home indicator bar color changes based on theme */}
+        <View style={[styles.homeIndicatorBar, { backgroundColor: colors.homeIndicatorBar }]} />
       </View>
     </SafeAreaView>
   )
@@ -207,7 +244,7 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
+    // backgroundColor handled dynamically
   },
   header: {
     flexDirection: "row",
@@ -216,16 +253,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     paddingTop: 20,
+    // backgroundColor handled dynamically
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: "600",
-    color: "#FFFFFF",
+    // color handled dynamically
   },
   doneButton: {
     fontSize: 18,
     fontWeight: "500",
-    color: "#60A5FA",
+    // color handled dynamically
   },
   scrollView: {
     flex: 1,
@@ -235,14 +273,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   proCard: {
-    backgroundColor: "#1F2937",
+    // backgroundColor handled dynamically
     borderRadius: 12,
     padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#374151",
+    // borderColor handled dynamically
   },
   proCardLeft: {
     flexDirection: "row",
@@ -250,14 +288,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   proBadge: {
-    backgroundColor: "#7C3AED",
+    backgroundColor: "#7C3AED", // This color seems constant, adjust if needed
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
     marginRight: 12,
   },
   proBadgeText: {
-    color: "#FFFFFF",
+    color: "#FFFFFF", // This color seems constant
     fontSize: 12,
     fontWeight: "bold",
   },
@@ -267,12 +305,12 @@ const styles = StyleSheet.create({
   proTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#A855F7",
+    // color handled dynamically
     marginBottom: 2,
   },
   proSubtitle: {
     fontSize: 14,
-    color: "#9CA3AF",
+    // color handled dynamically
   },
   section: {
     paddingHorizontal: 16,
@@ -281,7 +319,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 13,
     fontWeight: "500",
-    color: "#9CA3AF",
+    // color handled dynamically
     marginBottom: 12,
     letterSpacing: 1,
   },
@@ -291,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#374151",
+    // borderBottomColor handled dynamically
   },
   settingsItemLeft: {
     flexDirection: "row",
@@ -301,10 +339,11 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 12,
     width: 24,
+    // color handled dynamically for icon
   },
   settingsItemText: {
     fontSize: 18,
-    color: "#FFFFFF",
+    // color handled dynamically
     flex: 1,
   },
   footer: {
@@ -314,7 +353,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: "#6B7280",
+    // color handled dynamically
     fontStyle: "italic",
     textAlign: "center",
   },
@@ -328,7 +367,7 @@ const styles = StyleSheet.create({
   homeIndicatorBar: {
     width: 134,
     height: 5,
-    backgroundColor: "#FFFFFF",
+    // backgroundColor handled dynamically
     borderRadius: 3,
     opacity: 0.6,
   },

@@ -2,14 +2,158 @@
 
 import { Ionicons } from "@expo/vector-icons"
 import { useRouter } from "expo-router"
-import { useState } from "react"
-import { SafeAreaView, StatusBar, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native"
+import React, { useState } from "react"
+import { SafeAreaView, StatusBar, StyleSheet, Switch, Text, TouchableOpacity, View, Modal, FlatList, ActivityIndicator, Alert, Platform } from "react-native"
+import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Calendar from 'expo-calendar';
+ 
 
 export default function CalendarSyncScreen() {
-  const router = useRouter()
-  const [importFlightsEnabled, setImportFlightsEnabled] = useState(false)
-  const [exportFlightsEnabled, setExportFlightsEnabled] = useState(false)
+  const router = useRouter();
+  const [importFlightsEnabled, setImportFlightsEnabled] = useState(false);
+  const [exportFlightsEnabled, setExportFlightsEnabled] = useState(false);
+  // Modal state
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState<'import' | 'export' | null>(null);
+  // Calendar selection state
+  const [selectedImportCalendar, setSelectedImportCalendar] = useState<Calendar.Calendar | null>(null);
+  const [selectedExportCalendar, setSelectedExportCalendar] = useState<Calendar.Calendar | null>(null);
+  // Date range state
+  const [importStartDate, setImportStartDate] = useState<Date>(new Date());
+  const [importEndDate, setImportEndDate] = useState<Date>(new Date());
+  const [exportStartDate, setExportStartDate] = useState<Date>(new Date());
+  const [exportEndDate, setExportEndDate] = useState<Date>(new Date());
 
+  // Modal open handler
+  const openCalendarModal = (type: 'import' | 'export') => {
+    setModalType(type);
+    setModalVisible(true);
+  };
+
+  // Modal close handler
+  const closeCalendarModal = () => {
+    setModalVisible(false);
+    setModalType(null);
+  };
+
+  // Reusable modal component for calendar selection and date range
+  const CalendarPickerModal = ({
+    visible,
+    type,
+    onClose,
+    onSelectCalendar,
+    selectedCalendar,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+  }: {
+    visible: boolean;
+    type: 'import' | 'export';
+    onClose: () => void;
+    onSelectCalendar: (calendar: Calendar.Calendar) => void;
+    selectedCalendar: Calendar.Calendar | null;
+    startDate: Date;
+    endDate: Date;
+    setStartDate: (date: Date) => void;
+    setEndDate: (date: Date) => void;
+  }) => {
+    const [calendars, setCalendars] = useState<Calendar.Calendar[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [showStart, setShowStart] = useState(false);
+    const [showEnd, setShowEnd] = useState(false);
+
+    // Load calendars when modal opens
+    React.useEffect(() => {
+      if (!visible) return;
+      (async () => {
+        setLoading(true);
+        try {
+          const { status } = await Calendar.requestCalendarPermissionsAsync();
+          if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'Calendar permission is required.');
+            onClose();
+            return;
+          }
+          const cals = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+          setCalendars(cals);
+        } catch {
+          Alert.alert('Error', 'Failed to load calendars.');
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }, [visible, onClose]);
+
+    return (
+      <Modal
+        visible={visible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={onClose}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: '#222', borderRadius: 12, padding: 24, width: '85%', maxHeight: '80%' }}>
+            <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
+              {type === 'import' ? 'Select Import Calendar' : 'Select Export Calendar'}
+            </Text>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <FlatList
+                data={calendars}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => onSelectCalendar(item)} style={{ paddingVertical: 12 }}>
+                    <Text style={{ color: selectedCalendar?.id === item.id ? '#34C759' : '#fff', fontSize: 16 }}>{item.title}</Text>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={<Text style={{ color: '#fff' }}>No calendars found.</Text>}
+                style={{ maxHeight: 180 }}
+              />
+            )}
+            {/* Date pickers inside modal */}
+            <View style={{ marginTop: 18 }}>
+              <Text style={{ color: '#8E8E93', fontSize: 14 }}>Date Range:</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                <TouchableOpacity onPress={() => setShowStart(true)} style={{ marginRight: 12 }}>
+                  <Text style={{ color: '#fff', fontSize: 15 }}>Start: {startDate.toLocaleDateString()}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowEnd(true)}>
+                  <Text style={{ color: '#fff', fontSize: 15 }}>End: {endDate.toLocaleDateString()}</Text>
+                </TouchableOpacity>
+              </View>
+              {showStart && (
+                <DateTimePicker
+                  value={startDate}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, date) => {
+                    setShowStart(false);
+                    if (date) setStartDate(date);
+                  }}
+                />
+              )}
+              {showEnd && (
+                <DateTimePicker
+                  value={endDate}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, date) => {
+                    setShowEnd(false);
+                    if (date) setEndDate(date);
+                  }}
+                />
+              )}
+            </View>
+            <TouchableOpacity onPress={onClose} style={{ marginTop: 16, alignSelf: 'flex-end' }}>
+              <Text style={{ color: '#007AFF', fontSize: 16 }}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
@@ -21,7 +165,7 @@ export default function CalendarSyncScreen() {
           <Text style={styles.backText}>Settings</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Calendar Sync</Text>
-        <TouchableOpacity style={styles.helpButton} onPress={() => console.log("Help")}>
+        <TouchableOpacity style={styles.helpButton} onPress={() => console.log("Help")}>\
           <Ionicons name="help-circle-outline" size={24} color="#8E8E93" />
         </TouchableOpacity>
       </View>
@@ -62,7 +206,7 @@ export default function CalendarSyncScreen() {
           </View>
           <TouchableOpacity
             style={[styles.optionRow, !importFlightsEnabled && styles.disabledOption]}
-            onPress={importFlightsEnabled ? () => console.log("Choose Import Calendars") : undefined}
+            onPress={importFlightsEnabled ? () => openCalendarModal('import') : undefined}
             disabled={!importFlightsEnabled}
           >
             <View style={styles.optionLeft}>
@@ -70,7 +214,9 @@ export default function CalendarSyncScreen() {
               <Text style={[styles.optionTitle, !importFlightsEnabled && styles.disabledText]}>Choose Calendars</Text>
             </View>
             <View style={styles.optionRight}>
-              <Text style={[styles.selectText, !importFlightsEnabled && styles.disabledText]}>Select</Text>
+              <Text style={[styles.selectText, !importFlightsEnabled && styles.disabledText]}>
+                {selectedImportCalendar ? selectedImportCalendar.title : 'Select'}
+              </Text>
               <Ionicons name="chevron-forward" size={16} color={importFlightsEnabled ? "#8E8E93" : "#48484A"} />
             </View>
           </TouchableOpacity>
@@ -89,7 +235,7 @@ export default function CalendarSyncScreen() {
           </View>
           <TouchableOpacity
             style={[styles.optionRow, !exportFlightsEnabled && styles.disabledOption]}
-            onPress={exportFlightsEnabled ? () => console.log("Choose Export Calendar") : undefined}
+            onPress={exportFlightsEnabled ? () => openCalendarModal('export') : undefined}
             disabled={!exportFlightsEnabled}
           >
             <View style={styles.optionLeft}>
@@ -97,11 +243,26 @@ export default function CalendarSyncScreen() {
               <Text style={[styles.optionTitle, !exportFlightsEnabled && styles.disabledText]}>Choose Calendar</Text>
             </View>
             <View style={styles.optionRight}>
-              <Text style={[styles.selectText, !exportFlightsEnabled && styles.disabledText]}>Select</Text>
+              <Text style={[styles.selectText, !exportFlightsEnabled && styles.disabledText]}>
+                {selectedExportCalendar ? selectedExportCalendar.title : 'Select'}
+              </Text>
               <Ionicons name="chevron-forward" size={16} color={exportFlightsEnabled ? "#8E8E93" : "#48484A"} />
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* Calendar Picker Modal (Reusable for Import/Export) */}
+        <CalendarPickerModal
+          visible={modalVisible && !!modalType}
+          type={modalType || 'import'}
+          onClose={closeCalendarModal}
+          onSelectCalendar={modalType === 'import' ? setSelectedImportCalendar : setSelectedExportCalendar}
+          selectedCalendar={modalType === 'import' ? selectedImportCalendar : selectedExportCalendar}
+          startDate={modalType === 'import' ? importStartDate : exportStartDate}
+          endDate={modalType === 'import' ? importEndDate : exportEndDate}
+          setStartDate={modalType === 'import' ? setImportStartDate : setExportStartDate}
+          setEndDate={modalType === 'import' ? setImportEndDate : setExportEndDate}
+        />
       </View>
     </SafeAreaView>
   )
