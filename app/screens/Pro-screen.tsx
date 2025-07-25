@@ -18,7 +18,7 @@ export default function FlighthubProScreen() {
           <Text style={styles.backText}>Settings</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Flighthub Pro</Text>
-      </View>
+      </View>                                
 
       {/* Content */}
       <View style={styles.content}>
@@ -47,19 +47,19 @@ export default function FlighthubProScreen() {
 
         {/* Menu Options */}
         <View style={styles.menuSection}>
-          <TouchableOpacity style={styles.menuItem} onPress={() => console.log("View Flighthub Pro")}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/screens/Pro-screen')}> 
             <View>
               <Text style={styles.menuTitle}>View Flighthub Pro</Text>
               <Text style={styles.menuSubtitle}>Unlimited features & flights for a year</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => console.log("Compare Features")}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/screens/settings')}> 
             <Text style={styles.menuTitle}>Compare Features</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => console.log("Restore Purchase")}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/screens/settings')}> 
             <Text style={styles.menuTitle}>Restore Purchase</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => console.log("Manage Subscription")}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/screens/settings')}> 
             <Text style={styles.menuTitle}>Manage Subscription</Text>
           </TouchableOpacity>
         </View>
