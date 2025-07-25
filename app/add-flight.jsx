@@ -172,7 +172,7 @@ export default function EnhancedAddFlightModal() {
 
     setIsLoading(true)
     try {
-      const response = await fetch(`http://10.232.200.228:8080/flight?number=${query}`)
+      const response = await fetch(`http://192.168.137.192:8080/flight?number=${query}`)
 
       // First check if the response is ok (status 200-299)
       if (!response.ok) {

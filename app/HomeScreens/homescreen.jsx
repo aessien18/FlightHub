@@ -253,7 +253,7 @@ export default function HomeScreen() {
         try {
             console.log("Fetching random flight...");
             
-            const response = await fetch(`http://10.232.200.228:8080/flight/random`);
+            const response = await fetch(`http://192.168.137.192:8080/flight/random`);
             
             if (!response.ok) {
                 const errorText = await response.text();
