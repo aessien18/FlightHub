@@ -479,28 +479,26 @@ export default function HomeScreen() {
                     exiting={FadeOut.duration(200)}
                     style={styles.quickMenu}
                 >
-                    <TouchableOpacity
-                        style={styles.quickMenuItem}
-                        onPress={() => {
-                            toggleQuickMenu();
-                            // router.push('book-flight'); // Example navigation
-                            console.log('Navigating to Book a Flight');
-                        }}
-                    >
+                   <TouchableOpacity
+            style={styles.quickMenuItem}
+         onPress={() => {
+         toggleQuickMenu();
+        router.push('HomeScreens/flight-booking-screen'); 
+    }}
+>
                         <Ionicons name="airplane-outline" size={20} color="#333" style={styles.quickMenuItemIcon} />
                         <Text style={styles.quickMenuItemText}>Book a Flight</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.quickMenuItem}
                         onPress={() => {
-                            toggleQuickMenu();
-                            // router.push('book-ride'); // Example navigation
-                            console.log('Navigating to Book a Ride');
-                        }}
-                    >
-                        <Ionicons name="car-outline" size={20} color="#333" style={styles.quickMenuItemIcon} />
-                        <Text style={styles.quickMenuItemText}>Book a Ride</Text>
-                    </TouchableOpacity>
+                        toggleQuickMenu();
+                        router.push('/root/CarRentalScreen'); // Navigate to CarRentalScreen in root directory
+                   }}
+                   >
+                   <Ionicons name="car-outline" size={20} color="#333" style={styles.quickMenuItemIcon} />
+                   <Text style={styles.quickMenuItemText}>Book a Ride</Text>
+                   </TouchableOpacity>
                 </Animated.View>
             )}
 

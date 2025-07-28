@@ -224,7 +224,7 @@ function Layout() {
               <Text style={styles.headerSubtitleNew}>Fast, Easy & Secure</Text>
             </View>
             <View style={styles.avatarImgBox}>
-              <Image source={require('../assets/images/icon.png')} style={styles.avatarImgNew} />
+               <Image source={require('../../assets/worldmap.png')} style={styles.avatarImgNew} />
             </View>
           </View>
         </LinearGradient>
@@ -252,7 +252,7 @@ function Layout() {
         </View>
 
         {/* Card Section */}
-        <View style={styles.cardBox, {position: 'relative', zIndex: 1 } }>
+        <View style={[styles.cardBox, {position: 'relative', zIndex: 1 } ]}>
           <View style={styles.inputGroup}>
             <MaterialCommunityIcons name="airplane-takeoff" size={22} color="#A18CD1" style={styles.inputIconNew} />
             <View style={{ flex: 1 }}>
