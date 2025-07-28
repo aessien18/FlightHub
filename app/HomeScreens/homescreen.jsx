@@ -1153,10 +1153,6 @@ const styles = StyleSheet.create({
         color: '#333',
         fontWeight: '500',
     },
-    // Remove the last border from the last item
-    'quickMenuItem:last-child': {
-        borderBottomWidth: 0,
-    },
     // NEW: Sidebar Toggle Button Styles (if you still want to keep sidebar code)
     sidebarToggleButton: {
         position: 'absolute',
