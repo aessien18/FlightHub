@@ -6,6 +6,7 @@ import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, TextInput, Touc
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+import { registerForPushNotificationsAsync } from "./usePushNotifications"
 
 const FLIGHT_OPTIONS = [
     { label: "Today", icon: "calendar-outline" },
@@ -237,6 +238,10 @@ export default function HomeScreen() {
         setSelectedOption(option)
         setShowDropdown(false)
     }
+
+    useEffect(() => {
+        registerForPushNotificationsAsync();
+    }, []);
 
     // Function to toggle map type
     const toggleMapType = () => {
@@ -493,7 +498,7 @@ export default function HomeScreen() {
                         style={styles.quickMenuItem}
                         onPress={() => {
                         toggleQuickMenu();
-                        router.push('/root/CarRentalScreen'); // Navigate to CarRentalScreen in root directory
+                        router.push('/(root)/CarRentalScreen'); // Navigate to CarRentalScreen in root directory
                    }}
                    >
                    <Ionicons name="car-outline" size={20} color="#333" style={styles.quickMenuItemIcon} />

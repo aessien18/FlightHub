@@ -14,19 +14,19 @@ const rideOptions = [
   {
     id: 'uber',
     title: 'Uber',
-    image: require('../../assets/images/car1.png'),
+    image: require('../../assets/car1.jpeg'),
     multiplier: 1,
   },
   {
     id: 'uberX',
     title: 'Uber X',
-    image: require('../../assets/images/car2.png'),
+    image: require('../../assets/car1.jpeg'),
     multiplier: 1.5,
   },
   {
     id: 'uberXL',
     title: 'Uber XL',
-    image: require('../../assets/images/car3.png'),
+    image: require('../../assets/car1.jpeg'),
     multiplier: 2,
   },
 ];
