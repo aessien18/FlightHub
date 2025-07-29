@@ -31,8 +31,8 @@ function Layout() {
   const swipeAnim = useRef([]);
   
   const panResponders = useRef([]);
-  const [from, setFrom] = useState('Kumasi');
-  const [to, setTo] = useState('London');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
   const fromInputRef = React.useRef(null);
   const toInputRef = React.useRef(null);
   const [fromSuggestions, setFromSuggestions] = useState([]);
@@ -41,18 +41,20 @@ function Layout() {
   const [showToDropdown, setShowToDropdown] = useState(false);
 
   const countryList = [
-    'Kumasi', 'London', 'New York', 'Tokyo', 'Paris', 'Dubai', 'Accra', 'Berlin', 'Sydney', 'Toronto', 'Johannesburg', 'Cairo', 'Delhi', 'Moscow', 'Rio de Janeiro', 'Los Angeles', 'Rome', 'Madrid', 'Istanbul', 'Singapore', 'Bangkok', 'Hong Kong', 'Beijing', 'Seoul', 'Lagos', 'Nairobi', 'Cape Town', 'Melbourne', 'Brussels', 'Zurich', 'Stockholm', 'Oslo', 'Helsinki', 'Copenhagen', 'Lisbon', 'Budapest', 'Vienna', 'Prague', 'Warsaw', 'Athens', 'Dublin', 'Edinburgh', 'Venice', 'Munich', 'Frankfurt', 'Geneva', 'Barcelona', 'Valencia', 'Marseille', 'Nice', 'Lyon', 'Florence', 'Naples', 'Palermo', 'Turin', 'Milan', 'Venice', 'Verona', 'Bologna', 'Seville', 'Granada', 'Bilbao', 'Malaga', 'Santander', 'Vigo', 'Porto', 'Braga', 'Coimbra', 'Aveiro', 'Faro', 'Evora', 'Setubal', 'Leiria', 'Guimaraes', 'Viseu', 'Castelo Branco', 'Beja', 'Braganca', 'Guarda', 'Vila Real', 'Viana do Castelo', 'Madeira', 'Azores'
+    'Kumasi', 'London', 'New York', 'Tokyo', 'Paris', 'Dubai', 'Accra', 'Berlin', 'Sydney', 'Toronto', 'Johannesburg', 
+    'Cairo', 'Delhi', 'Moscow', 'Rio de Janeiro', 'Los Angeles', 'Rome', 'Madrid', 'Istanbul', 'Singapore', 'Bangkok', 
+    'Hong Kong', 'Beijing', 'Seoul', 'Lagos', 'Nairobi', 'Cape Town', 'Melbourne', 'Brussels', 'Zurich', 'Stockholm', 
+    'Oslo', 'Helsinki', 'Copenhagen', 'Lisbon', 'Budapest', 'Vienna', 'Prague', 'Warsaw', 'Athens', 'Dublin', 'Edinburgh', 
+    'Venice', 'Munich', 'Frankfurt', 'Geneva', 'Barcelona', 'Valencia', 'Marseille', 'Nice', 'Lyon', 'Florence', 'Naples', 
+    'Palermo', 'Turin', 'Milan', 'Venice', 'Verona', 'Bologna', 'Seville', 'Granada', 'Bilbao', 'Malaga', 'Santander', 
+    'Vigo', 'Porto', 'Braga', 'Coimbra', 'Aveiro', 'Faro', 'Evora', 'Setubal', 'Leiria', 'Guimaraes', 'Viseu', 
+    'Castelo Branco', 'Beja', 'Braganca', 'Guarda', 'Vila Real', 'Viana do Castelo', 'Madeira', 'Azores'
   ];
-  const [departure, setDeparture] = useState('JAN 26 2025');
-  const [returnDate, setReturnDate] = useState('FEB 15 2025');
+  const [departure, setDeparture] = useState('');
+  const [returnDate, setReturnDate] = useState('');
   const [isDeparturePickerVisible, setDeparturePickerVisible] = useState(false);
   const [isReturnPickerVisible, setReturnPickerVisible] = useState(false);
-  const [flights, setFlights] = useState([
-    { from: 'Kumasi', to: 'London', date: 'Jan 26, 2025', status: 'Confirmed' },
-    { from: 'London', to: 'Kumasi', date: 'Feb 15, 2025', status: 'Confirmed' },
-    { from: 'New York', to: 'Tokyo', date: 'Aug 10, 2025', status: 'Pending' },
-    { from: 'Paris', to: 'Dubai', date: 'Sep 2, 2025', status: 'Confirmed' },
-  ]);
+  const [flights, setFlights] = useState([]);
 
   // Initialize swipe animation and pan responders for each flight
   React.useEffect(() => {
